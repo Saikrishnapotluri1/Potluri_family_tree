@@ -36,101 +36,40 @@
 
 <script>
   // ==========================================
-  // YOUR FAMILY DATA
+  // DATA FROM Potluri_family_tree.xlsx
   // ==========================================
   
   const excelData = [
-    // --- THE ROOT ANCESTOR ---
-    { 
-      name: "Potluri Seetamma", 
-      parent: "", 
-      photo: "", 
-      spouse: "", 
-      spousePhoto: "" 
-    },
-    
-    // --- GENERATION 2 ---
-    { 
-      name: "Potluri Madhav Rao", 
-      parent: "Potluri Seetamma", 
-      photo: "Potluri_Madhav_Rao.jpg", 
-      spouse: "Atluri Swarajyam", 
-      spousePhoto: "Atluri_Swarajyam.jpg" 
-    },
-
-    // --- GENERATION 3 (Children of Madhav Rao) ---
-    { 
-      name: "Potluri Ramatulasi", 
-      parent: "Potluri Madhav Rao", 
-      photo: "", 
-      spouse: "Atluri Kishtarao", 
-      spousePhoto: "" 
-    },
-    { 
-      name: "Potluri Venkateswara rao", 
-      parent: "Potluri Madhav Rao", 
-      photo: "Potluri_Venkateswara_rao.jpg", 
-      spouse: "Myneni Saralakumari", 
-      spousePhoto: "Myneni_Saralakumari.jpg" 
-    },
-    { 
-      name: "Potluri Rangarao (Bujji)", 
-      parent: "Potluri Madhav Rao", 
-      photo: "", 
-      spouse: "", 
-      spousePhoto: "" 
-    },
-    { 
-      name: "Potluri Seethaiah", 
-      parent: "Potluri Madhav Rao", 
-      photo: "", 
-      spouse: "", 
-      spousePhoto: "" 
-    },
-    { 
-      name: "Potluri Sheshagiri", 
-      parent: "Potluri Madhav Rao", 
-      photo: "", 
-      spouse: "", 
-      spousePhoto: "" 
-    },
-    { 
-      name: "Potluri Rani", 
-      parent: "Potluri Madhav Rao", 
-      photo: "", 
-      spouse: "", 
-      spousePhoto: "" 
-    },
-    { 
-      name: "Potluri Yeramma", 
-      parent: "Potluri Madhav Rao", 
-      photo: "", 
-      spouse: "", 
-      spousePhoto: "" 
-    },
-    { 
-      name: "Potluri Budamma", 
-      parent: "Potluri Madhav Rao", 
-      photo: "", 
-      spouse: "", 
-      spousePhoto: "" 
-    }
+    { name: "Potluri Seetaramaiah", parent: "", photo: "", spouse: "Potluri Seetamma", spousePhoto: "" },
+    { name: "Potluri Madhav Rao", parent: "Potluri Seetaramaiah", photo: "Potluri_Madhav_Rao.jpg", spouse: "Atluri Swarajyam", spousePhoto: "Atluri_Swarajyam.jpg" },
+    { name: "Potluri Ramatulasi", parent: "Potluri Madhav Rao", photo: "", spouse: "Atluri Kishtarao", spousePhoto: "" },
+    { name: "Potluri Venkateswara rao", parent: "Potluri Madhav Rao", photo: "Potluri_Venkateswara_rao.jpg", spouse: "Myneni Saralakumari", spousePhoto: "Myneni_Saralakumari.jpg" },
+    { name: "Potluri Rangarao (Bujji)", parent: "Potluri Madhav Rao", photo: "", spouse: "Bhagyalakshmi", spousePhoto: "Bhagyalakshmi_Baby.jpg" },
+    { name: "Potluri Seethaiah", parent: "Potluri Madhav Rao", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Sheshagiri", parent: "Potluri Madhav Rao", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Rani", parent: "Potluri Madhav Rao", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Yeramma", parent: "Potluri Madhav Rao", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Budamma", parent: "Potluri Madhav Rao", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Srinivas", parent: "Potluri Venkateswara rao", photo: "", spouse: "Potluri Anita", spousePhoto: "" },
+    { name: "Potluri Ram Prasad", parent: "Potluri Venkateswara rao", photo: "", spouse: "Myneni Parvathi", spousePhoto: "" },
+    { name: "Potluri Bhargav", parent: "Potluri Srinivas", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Karthik", parent: "Potluri Srinivas", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Sai Krishna", parent: "Potluri Ram Prasad", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Atluri Srinivas", parent: "Atluri Kishtarao", photo: "", spouse: "Jyothi", spousePhoto: "" },
+    { name: "Alla chinamma", parent: "Atluri Kishtarao", photo: "", spouse: "Alla KrishnaRao", spousePhoto: "" },
+    { name: "Potluri Janardhan", parent: "Potluri Rangarao (Bujji)", photo: "", spouse: "Jansi rani", spousePhoto: "" },
+    { name: "Potluri Lakshmi", parent: "Potluri Rangarao (Bujji)", photo: "", spouse: "Satyanarayana", spousePhoto: "" },
+    { name: "Potluri Raghavendra", parent: "Potluri Rangarao (Bujji)", photo: "", spouse: "", spousePhoto: "" }
   ];
 
   // ==========================================
-  // THE ENGINE (Do not edit below this line)
+  // THE ENGINE
   // ==========================================
   
   function buildTree(data) {
     let map = {};
     let roots = [];
-
-    // Create a map of all people
-    data.forEach(node => {
-      map[node.name] = { ...node, children: [] };
-    });
-
-    // Hook up the children to the parents
+    data.forEach(node => { map[node.name] = { ...node, children: [] }; });
     data.forEach(node => {
       if (node.parent && map[node.parent]) {
         map[node.parent].children.push(map[node.name]);
@@ -144,7 +83,6 @@
   function createHTML(node) {
     let html = '<li>';
     let hasChildren = node.children && node.children.length > 0;
-    
     let clickCode = hasChildren ? 'onclick="toggleFamily(this)"' : '';
     let titleCode = hasChildren ? '<span class="title">Click for family</span>' : '';
 
@@ -166,21 +104,16 @@
 
     if (hasChildren) {
       html += '<ul class="hidden">';
-      node.children.forEach(child => {
-        html += createHTML(child);
-      });
+      node.children.forEach(child => { html += createHTML(child); });
       html += '</ul>';
     }
-
     html += '</li>';
     return html;
   }
 
   const familyTree = buildTree(excelData);
   let finalHTML = '<ul>';
-  familyTree.forEach(rootPerson => {
-    finalHTML += createHTML(rootPerson);
-  });
+  familyTree.forEach(rootPerson => { finalHTML += createHTML(rootPerson); });
   finalHTML += '</ul>';
 
   document.getElementById('family-tree-box').innerHTML = finalHTML;
