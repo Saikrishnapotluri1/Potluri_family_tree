@@ -73,14 +73,48 @@
       spouse: "Myneni Saralakumari", 
       spousePhoto: "Myneni_Saralakumari.jpg" 
     },
-
-    // --- OTHERS (Missing Parent Connections) ---
-    { name: "Potluri Rangarao (Bujji)", parent: "", photo: "", spouse: "", spousePhoto: "" },
-    { name: "Potluri Seethaiah", parent: "", photo: "", spouse: "", spousePhoto: "" },
-    { name: "Potluri Sheshagiri", parent: "", photo: "", spouse: "", spousePhoto: "" },
-    { name: "Potluri Rani", parent: "", photo: "", spouse: "", spousePhoto: "" },
-    { name: "Potluri Yeramma", parent: "", photo: "", spouse: "", spousePhoto: "" },
-    { name: "Potluri Budamma", parent: "", photo: "", spouse: "", spousePhoto: "" }
+    { 
+      name: "Potluri Rangarao (Bujji)", 
+      parent: "Potluri Madhav Rao", 
+      photo: "", 
+      spouse: "", 
+      spousePhoto: "" 
+    },
+    { 
+      name: "Potluri Seethaiah", 
+      parent: "Potluri Madhav Rao", 
+      photo: "", 
+      spouse: "", 
+      spousePhoto: "" 
+    },
+    { 
+      name: "Potluri Sheshagiri", 
+      parent: "Potluri Madhav Rao", 
+      photo: "", 
+      spouse: "", 
+      spousePhoto: "" 
+    },
+    { 
+      name: "Potluri Rani", 
+      parent: "Potluri Madhav Rao", 
+      photo: "", 
+      spouse: "", 
+      spousePhoto: "" 
+    },
+    { 
+      name: "Potluri Yeramma", 
+      parent: "Potluri Madhav Rao", 
+      photo: "", 
+      spouse: "", 
+      spousePhoto: "" 
+    },
+    { 
+      name: "Potluri Budamma", 
+      parent: "Potluri Madhav Rao", 
+      photo: "", 
+      spouse: "", 
+      spousePhoto: "" 
+    }
   ];
 
   // ==========================================
@@ -91,10 +125,12 @@
     let map = {};
     let roots = [];
 
+    // Create a map of all people
     data.forEach(node => {
       map[node.name] = { ...node, children: [] };
     });
 
+    // Hook up the children to the parents
     data.forEach(node => {
       if (node.parent && map[node.parent]) {
         map[node.parent].children.push(map[node.name]);
