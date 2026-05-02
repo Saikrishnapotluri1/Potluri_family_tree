@@ -3,391 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Descendant Family Tree</title>
+<title>Potluri Family Tree</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 20px;
-  }
-
-  /* Container to allow horizontal scrolling for very wide trees */
-  .tree-container {
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: 50px;
-  }
-
-  /* Core Tree Structure */
-  .tree ul {
-    padding-top: 20px; 
-    position: relative;
-    transition: all 0.5s;
-    display: flex; 
-    justify-content: center;
-    padding-left: 0;
-    min-width: max-content; /* Keeps the tree from squishing */
-  }
-
-  .tree li {
-    float: left; 
-    text-align: center;
-    list-style-type: none;
-    position: relative;
-    padding: 20px 5px 0 5px;
-    transition: all 0.5s;
-  }
-
-  /* Drawing the connecting lines */
-  .tree li::before, .tree li::after {
-    content: ''; 
-    position: absolute; 
-    top: 0; 
-    right: 50%;
-    border-top: 2px solid #ccc;
-    width: 50%; 
-    height: 20px;
-  }
-  .tree li::after {
-    right: auto; 
-    left: 50%;
-    border-left: 2px solid #ccc;
-  }
-
-  /* Clean up lines for single elements and edges */
+  body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
+  .tree-container { width: 100%; overflow-x: auto; padding-bottom: 50px; }
+  .tree ul { padding-top: 20px; position: relative; transition: all 0.5s; display: flex; justify-content: center; padding-left: 0; min-width: max-content; }
+  .tree li { float: left; text-align: center; list-style-type: none; position: relative; padding: 20px 5px 0 5px; transition: all 0.5s; }
+  .tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 2px solid #ccc; width: 50%; height: 20px; }
+  .tree li::after { right: auto; left: 50%; border-left: 2px solid #ccc; }
   .tree li:only-child::after, .tree li:only-child::before { display: none; }
   .tree li:only-child { padding-top: 0; }
   .tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
   .tree li:first-child::after { border-radius: 5px 0 0 0; }
   .tree li:last-child::before { border-right: 2px solid #ccc; border-radius: 0 5px 0 0; }
+  .tree ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 2px solid #ccc; width: 0; height: 20px; }
   
-  /* Vertical drop line */
-  .tree ul ul::before {
-    content: ''; 
-    position: absolute; 
-    top: 0; 
-    left: 50%;
-    border-left: 2px solid #ccc;
-    width: 0; 
-    height: 20px;
-  }
-
-  /* The actual Photo/Name card */
-  .node {
-    text-decoration: none;
-    color: #333;
-    display: inline-block;
-    padding: 15px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 150px; /* Wider to fit two people */
-  }
-  
-  .node:hover {
-    background: #e0f7fa;
-    transform: scale(1.05);
-  }
-
-  /* NEW CLASSES FOR COUPLES */
-  .couple {
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* Space between the two photos */
-  }
-
-  .person {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80px; /* Keeps long names from stretching the box weirdly */
-  }
-
-  .person img {
-    width: 65px; 
-    height: 65px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #4CAF50;
-    margin-bottom: 8px;
-    background-color: #ddd;
-  }
-
-  .name {
-    display: block; 
-    font-weight: bold; 
-    font-size: 13px;
-    line-height: 1.2;
-  }
-  
-  .title {
-    display: block; 
-    font-size: 11px; 
-    color: #888;
-    margin-top: 8px;
-  }
-
-  /* Magic class that hides generations until clicked */
-  .hidden {
-    display: none !important;
-  }
+  .node { text-decoration: none; color: #333; display: inline-block; padding: 15px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s ease; min-width: 150px; }
+  .node:hover { background: #e0f7fa; transform: scale(1.05); }
+  .couple { display: flex; justify-content: center; gap: 15px; }
+  .person { display: flex; flex-direction: column; align-items: center; width: 80px; }
+  .person img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 3px solid #4CAF50; margin-bottom: 8px; background-color: #ddd; }
+  .name { display: block; font-weight: bold; font-size: 13px; line-height: 1.2; }
+  .title { display: block; font-size: 11px; color: #888; margin-top: 8px; }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
 <div class="tree-container">
-  <div class="tree">
-    <!-- LEVEL 1: GREAT-GREAT-GRANDPARENTS (The Root Couple) -->
-    <ul>
-      <li>
-        <div class="node" onclick="toggleFamily(this)">
-          <div class="couple">
-            <div class="person">
-              <img src="great-great-grandfather.jpg" alt="Grandfather">
-              <span class="name">Grandfather Name</span>
-            </div>
-            <div class="person">
-              <img src="great-great-grandmother.jpg" alt="Grandmother">
-              <span class="name">Grandmother Name</span>
-            </div>
-          </div>
-          <span class="title">Click to view 11 Children</span>
-        </div>
-
-        <!-- LEVEL 2: THEIR 11 CHILDREN (Hidden by default) -->
-        <ul class="hidden">
-          
-          <!-- DAUGHTER 1 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter1.jpg" alt="Daughter 1">
-                  <span class="name">Daughter 1</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- DAUGHTER 2 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter2.jpg" alt="Daughter 2">
-                  <span class="name">Daughter 2</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- DAUGHTER 3 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter3.jpg" alt="Daughter 3">
-                  <span class="name">Daughter 3</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- DAUGHTER 4 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter4.jpg" alt="Daughter 4">
-                  <span class="name">Daughter 4</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- DAUGHTER 5 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter5.jpg" alt="Daughter 5">
-                  <span class="name">Daughter 5</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- DAUGHTER 6 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter6.jpg" alt="Daughter 6">
-                  <span class="name">Daughter 6</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- DAUGHTER 7 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter7.jpg" alt="Daughter 7">
-                  <span class="name">Daughter 7</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- DAUGHTER 8 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="daughter8.jpg" alt="Daughter 8">
-                  <span class="name">Daughter 8</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- SON 1 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="son1.jpg" alt="Son 1">
-                  <span class="name">Son 1</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- SON 2 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="son2.jpg" alt="Son 2">
-                  <span class="name">Son 2</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-          <!-- SON 3 -->
-          <li>
-            <div class="node" onclick="toggleFamily(this)">
-              <div class="couple">
-                <div class="person">
-                  <img src="son3.jpg" alt="Son 3">
-                  <span class="name">Son 3</span>
-                </div>
-                <div class="person">
-                  <img src="placeholder.jpg" alt="Spouse">
-                  <span class="name">Spouse</span>
-                </div>
-              </div>
-              <span class="title">Click for family</span>
-            </div>
-            <ul class="hidden">
-              <li><div class="node"><div class="couple"><div class="person"><img src="placeholder.jpg"><span class="name">Grandchild</span></div></div></div></li>
-            </ul>
-          </li>
-
-        </ul>
-      </li>
-    </ul>
-  </div>
+  <div class="tree" id="family-tree-box"></div>
 </div>
 
-<!-- JavaScript to make the clicking work -->
 <script>
+  // ==========================================
+  // YOUR FAMILY DATA
+  // ==========================================
+  
+  const excelData = [
+    // --- THE ROOT ANCESTOR ---
+    { 
+      name: "Potluri Seetamma", 
+      parent: "", 
+      photo: "", 
+      spouse: "", 
+      spousePhoto: "" 
+    },
+    
+    // --- GENERATION 2 ---
+    { 
+      name: "Potluri Madhav Rao", 
+      parent: "Potluri Seetamma", 
+      photo: "Potluri_Madhav_Rao.jpg", 
+      spouse: "Atluri Swarajyam", 
+      spousePhoto: "Atluri_Swarajyam.jpg" 
+    },
+
+    // --- GENERATION 3 (Children of Madhav Rao) ---
+    { 
+      name: "Potluri Ramatulasi", 
+      parent: "Potluri Madhav Rao", 
+      photo: "", 
+      spouse: "Atluri Kishtarao", 
+      spousePhoto: "" 
+    },
+    { 
+      name: "Potluri Venkateswara rao", 
+      parent: "Potluri Madhav Rao", 
+      photo: "Potluri_Venkateswara_rao.jpg", 
+      spouse: "Myneni Saralakumari", 
+      spousePhoto: "Myneni_Saralakumari.jpg" 
+    },
+
+    // --- OTHERS (Missing Parent Connections) ---
+    { name: "Potluri Rangarao (Bujji)", parent: "", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Seethaiah", parent: "", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Sheshagiri", parent: "", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Rani", parent: "", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Yeramma", parent: "", photo: "", spouse: "", spousePhoto: "" },
+    { name: "Potluri Budamma", parent: "", photo: "", spouse: "", spousePhoto: "" }
+  ];
+
+  // ==========================================
+  // THE ENGINE (Do not edit below this line)
+  // ==========================================
+  
+  function buildTree(data) {
+    let map = {};
+    let roots = [];
+
+    data.forEach(node => {
+      map[node.name] = { ...node, children: [] };
+    });
+
+    data.forEach(node => {
+      if (node.parent && map[node.parent]) {
+        map[node.parent].children.push(map[node.name]);
+      } else {
+        roots.push(map[node.name]); 
+      }
+    });
+    return roots;
+  }
+
+  function createHTML(node) {
+    let html = '<li>';
+    let hasChildren = node.children && node.children.length > 0;
+    
+    let clickCode = hasChildren ? 'onclick="toggleFamily(this)"' : '';
+    let titleCode = hasChildren ? '<span class="title">Click for family</span>' : '';
+
+    html += `<div class="node" ${clickCode}>
+              <div class="couple">
+                <div class="person">
+                  <img src="${node.photo || 'placeholder.jpg'}" alt="${node.name}">
+                  <span class="name">${node.name}</span>
+                </div>`;
+
+    if (node.spouse) {
+      html += ` <div class="person">
+                  <img src="${node.spousePhoto || 'placeholder.jpg'}" alt="${node.spouse}">
+                  <span class="name">${node.spouse}</span>
+                </div>`;
+    }
+
+    html += `  </div>${titleCode}</div>`;
+
+    if (hasChildren) {
+      html += '<ul class="hidden">';
+      node.children.forEach(child => {
+        html += createHTML(child);
+      });
+      html += '</ul>';
+    }
+
+    html += '</li>';
+    return html;
+  }
+
+  const familyTree = buildTree(excelData);
+  let finalHTML = '<ul>';
+  familyTree.forEach(rootPerson => {
+    finalHTML += createHTML(rootPerson);
+  });
+  finalHTML += '</ul>';
+
+  document.getElementById('family-tree-box').innerHTML = finalHTML;
+
   function toggleFamily(element) {
     let nextUl = element.nextElementSibling;
     if (nextUl && nextUl.tagName === 'UL') {
